@@ -12,6 +12,7 @@ model User {
     email           String        @unique
     username        String
     discordId       String        @unique
+    userRol         UserRole      @default(USER)
     avatarUrl       String?
     registeredAt    DateTime      @default(now())
     createdProjects Project[]     @relation("CreatedProjects")
@@ -141,4 +142,9 @@ enum ProjectPermission {
     ADMIN
     MODERATOR
     MEMBER
+}
+
+enum UserRole {
+    USER
+    ADMIN
 }
