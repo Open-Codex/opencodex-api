@@ -1,0 +1,144 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id              String        @id @default(cuid())
+    email           String        @unique
+    username        String
+    discordId       String        @unique
+    avatarUrl       String?
+    registeredAt    DateTime      @default(now())
+    createdProjects Project[]     @relation("CreatedProjects")
+    memberships     Membership[]
+    joinRequests    JoinRequest[]
+    userSkills      UserSkill[]
+}
+
+model Project {
+    id               String         @id @default(cuid())
+    name             String
+    description      String
+    imageUrl         String?
+    createdAt        DateTime       @default(now())
+    status           ProjectStatus  @default(ACTIVE)
+    creatorId        String
+    creator          User           @relation("CreatedProjects", fields: [creatorId], references: [id])
+    discordChannelId String?
+    memberships      Membership[]
+    vacancies        Vacancy[]
+    requiredSkills   ProjectSkill[]
+    joinRequests     JoinRequest[]
+}
+
+model Membership {
+    id         String            @id @default(cuid())
+    userId     String
+    projectId  String
+    roleId     String
+    permission ProjectPermission @default(MEMBER)
+    joinedAt   DateTime          @default(now())
+
+    user    User    @relation(fields: [userId], references: [id])
+    project Project @relation(fields: [projectId], references: [id])
+    role    Role    @relation(fields: [roleId], references: [id])
+
+    @@unique([userId, projectId])
+}
+
+model Role {
+    id          String       @id @default(cuid())
+    name        String       @unique
+    memberships Membership[]
+}
+
+model Vacancy {
+    id          String   @id @default(cuid())
+    projectId   String
+    title       String
+    description String
+    isFilled    Boolean  @default(false)
+    createdAt   DateTime @default(now())
+
+    project        Project        @relation(fields: [projectId], references: [id])
+    requiredSkills VacancySkill[]
+}
+
+model Skill {
+    id            String         @id @default(cuid())
+    name          String         @unique
+    projectSkills ProjectSkill[]
+    vacancySkills VacancySkill[]
+    userSkills    UserSkill[]
+}
+
+model ProjectSkill {
+    id        String @id @default(cuid())
+    projectId String
+    skillId   String
+
+    project Project @relation(fields: [projectId], references: [id])
+    skill   Skill   @relation(fields: [skillId], references: [id])
+
+    @@unique([projectId, skillId])
+}
+
+model VacancySkill {
+    id        String @id @default(cuid())
+    vacancyId String
+    skillId   String
+
+    vacancy Vacancy @relation(fields: [vacancyId], references: [id])
+    skill   Skill   @relation(fields: [skillId], references: [id])
+
+    @@unique([vacancyId, skillId])
+}
+
+model UserSkill {
+    id      String @id @default(cuid())
+    userId  String
+    skillId String
+
+    user  User  @relation(fields: [userId], references: [id])
+    skill Skill @relation(fields: [skillId], references: [id])
+
+    @@unique([userId, skillId])
+}
+
+model JoinRequest {
+    id         String        @id @default(cuid())
+    userId     String
+    projectId  String
+    message    String?
+    status     RequestStatus @default(PENDING)
+    createdAt  DateTime      @default(now())
+    reviewedAt DateTime?
+
+    user    User    @relation(fields: [userId], references: [id])
+    project Project @relation(fields: [projectId], references: [id])
+
+    @@unique([userId, projectId])
+}
+
+enum ProjectStatus {
+    ACTIVE
+    ARCHIVED
+    COMPLETED
+}
+
+enum RequestStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
+}
+
+enum ProjectPermission {
+    ADMIN
+    MODERATOR
+    MEMBER
+}
