@@ -7,12 +7,18 @@ CREATE TYPE "RequestStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
 -- CreateEnum
 CREATE TYPE "ProjectPermission" AS ENUM ('ADMIN', 'MODERATOR', 'MEMBER');
 
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
-    "discordId" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "discordId" TEXT,
+    "userRol" "UserRole" NOT NULL DEFAULT 'USER',
     "avatarUrl" TEXT,
     "registeredAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -115,6 +121,9 @@ CREATE TABLE "JoinRequest" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_discordId_key" ON "User"("discordId");
