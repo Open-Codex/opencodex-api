@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import testRoutes from './routes/test.routes';
 import authRoutes from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.use(cors());
 // Routes
 app.use('/test', testRoutes);
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 
 export default app;
