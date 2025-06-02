@@ -8,6 +8,7 @@ import testRoutes from './routes/test.routes';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import skillRoutes from './routes/skill.routes';
+import roleRoutes from './routes/role.routes';
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use('/test', testRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/skill', skillRoutes);
+app.use('/role', roleRoutes);
 
 export default app;
