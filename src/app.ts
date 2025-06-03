@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
 import skillRoutes from './routes/skill.routes';
 import roleRoutes from './routes/role.routes';
+import projectRoutes from './routes/project.route';
 
 const app = express();
 
@@ -28,5 +29,6 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/skill', skillRoutes);
 app.use('/role', roleRoutes);
+app.use('/project', projectRoutes);
 
 export default app;
