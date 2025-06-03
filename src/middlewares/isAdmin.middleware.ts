@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
+import { UserRole } from '@prisma/client'; // Asegúrate de que esta importación sea correcta
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
     user?: {
+        id: string;
+        email: string;
+        role: UserRole;
         userRol: string;
-    }
+    };
 }
 
 export const isAdmin = (req: AuthRequest, res: Response, next: NextFunction) => {
