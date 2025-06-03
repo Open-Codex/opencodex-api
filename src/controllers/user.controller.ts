@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getUserByIdService } from '../services/user.service';
-import { AuthRequest } from '../types/authRequest';
+import { AuthRequest } from '../types/index'
 
 export const getMe = async (req: AuthRequest, res: Response) => {
     const userId = req.user?.id;
