@@ -10,6 +10,7 @@ import userRoutes from './routes/user.routes';
 import skillRoutes from './routes/skill.routes';
 import roleRoutes from './routes/role.routes';
 import projectRoutes from './routes/project.route';
+import joinRequestRoutes from './routes/joinRequest.routes';
 
 const app = express();
 
@@ -30,5 +31,6 @@ app.use('/user', userRoutes);
 app.use('/skill', skillRoutes);
 app.use('/role', roleRoutes);
 app.use('/project', projectRoutes);
+app.use('/join-request', joinRequestRoutes);
 
 export default app;
