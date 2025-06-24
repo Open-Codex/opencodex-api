@@ -13,10 +13,24 @@ model User {
     username        String        @unique
     password        String
     name            String
-    discordId       String?        @unique
+    description     String?
+    discordId       String?       @unique
+
+    // Social Links
+    github          String?
+    linkedin        String?
+    twitter         String?
+    website         String?
+
+    // Log Rating
+    ratingsGiven      LogRating[]   @relation("GivenRatings")
+    ratingsReceived   LogRating[]   @relation("ReceivedRatings")
+
+    status          UserStatus    @default(ACTIVE)
     userRol         UserRole      @default(USER)
     avatarUrl       String?
     registeredAt    DateTime      @default(now())
+    lastLogin       DateTime?
     createdProjects Project[]     @relation("CreatedProjects")
     memberships     Membership[]
     joinRequests    JoinRequest[]
@@ -28,15 +42,31 @@ model Project {
     name             String
     description      String
     imageUrl         String?
+
+    // Social Links
+    github           String?
+    linkedin         String?
+    twitter          String?
+    website          String?
+
     createdAt        DateTime       @default(now())
     status           ProjectStatus  @default(ACTIVE)
     creatorId        String
     creator          User           @relation("CreatedProjects", fields: [creatorId], references: [id])
+    categoryId       String?
+    category         Category?      @relation(fields: [categoryId], references: [id])
     discordChannelId String?
     memberships      Membership[]
     vacancies        Vacancy[]
     requiredSkills   ProjectSkill[]
     joinRequests     JoinRequest[]
+}
+
+model Category {
+    id               String         @id @default(cuid())
+    name             String         @unique
+    description      String
+    projects Project[]
 }
 
 model Membership {
@@ -128,6 +158,19 @@ model JoinRequest {
     @@unique([userId, projectId])
 }
 
+model LogRating {
+    id          String   @id @default(cuid())
+    fromUserId  String
+    toUserId    String
+    isLike      Boolean
+    createdAt   DateTime @default(now())
+
+    fromUser    User     @relation("GivenRatings", fields: [fromUserId], references: [id])
+    toUser      User     @relation("ReceivedRatings", fields: [toUserId], references: [id])
+
+    @@unique([fromUserId, toUserId]) // evita votos duplicados
+}
+
 enum ProjectStatus {
     ACTIVE
     ARCHIVED
@@ -149,4 +192,10 @@ enum ProjectPermission {
 enum UserRole {
     USER
     ADMIN
+}
+
+enum UserStatus {
+    ACTIVE
+    INACTIVE
+    BANNED
 }
