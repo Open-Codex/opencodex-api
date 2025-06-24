@@ -12,6 +12,7 @@ import roleRoutes from './routes/role.routes';
 import projectRoutes from './routes/project.route';
 import joinRequestRoutes from './routes/joinRequest.routes';
 import vacancyRoutes from './routes/vacancy.routes';
+import categoryRoutes from './routes/category.routes';
 
 const app = express();
 
@@ -34,5 +35,6 @@ app.use('/role', roleRoutes);
 app.use('/project', projectRoutes);
 app.use('/join-request', joinRequestRoutes);
 app.use('/vacancy', vacancyRoutes);
+app.use('/category', categoryRoutes);
 
 export default app;
