@@ -22,6 +22,10 @@ model User {
     twitter         String?
     website         String?
 
+    // Reputación
+    likesReceived    Int      @default(0)
+    dislikesReceived Int      @default(0)
+
     // Log Rating
     ratingsGiven      LogRating[]   @relation("GivenRatings")
     ratingsReceived   LogRating[]   @relation("ReceivedRatings")
