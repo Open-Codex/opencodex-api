@@ -13,6 +13,7 @@ import projectRoutes from './routes/project.route';
 import joinRequestRoutes from './routes/joinRequest.routes';
 import vacancyRoutes from './routes/vacancy.routes';
 import categoryRoutes from './routes/category.routes';
+import logRatingRoutes from './routes/logRating.routes';
 
 const app = express();
 
@@ -36,5 +37,6 @@ app.use('/project', projectRoutes);
 app.use('/join-request', joinRequestRoutes);
 app.use('/vacancy', vacancyRoutes);
 app.use('/category', categoryRoutes);
+app.use('/rating', logRatingRoutes);
 
 export default app;

@@ -11,11 +11,13 @@ export const getUserByIdService = async (id: string) => {
             userRol: true,
             avatarUrl: true,
             registeredAt: true,
+            likesReceived: true,
+            dislikesReceived: true,
             userSkills: {
                 select: {
                     skill: true,
                 }
-            }
+            },
         },
     });
 };
@@ -31,6 +33,8 @@ export const getUserByUsernameService = async (username: string) => {
             userRol: true,
             avatarUrl: true,
             registeredAt: true,
+            likesReceived: true,
+            dislikesReceived: true,
             userSkills: {
                 select: {
                     skill: true,
