@@ -8,9 +8,16 @@ export const getUserByIdService = async (id: string) => {
             email: true,
             username: true,
             name: true,
+            description: true,
+            github: true,
+            linkedin: true,
+            twitter: true,
+            website: true,
+            status: true,
             userRol: true,
             avatarUrl: true,
             registeredAt: true,
+            lastLogin: true,
             likesReceived: true,
             dislikesReceived: true,
             userSkills: {
@@ -18,6 +25,26 @@ export const getUserByIdService = async (id: string) => {
                     skill: true,
                 }
             },
+            memberships: {
+                select: {
+                    project: {
+                        select: {
+                            id: true,
+                            name: true,
+                            imageUrl: true,
+                            status: true,
+                        }
+                    },
+                    permission: true,
+                    role: {
+                        select: {
+                            id: true,
+                            name: true,
+                        }
+                    },
+                    joinedAt: true,
+                }
+            }
         },
     });
 };
@@ -30,14 +57,41 @@ export const getUserByUsernameService = async (username: string) => {
             email: true,
             username: true,
             name: true,
+            description: true,
+            github: true,
+            linkedin: true,
+            twitter: true,
+            website: true,
+            status: true,
             userRol: true,
             avatarUrl: true,
             registeredAt: true,
+            lastLogin: true,
             likesReceived: true,
             dislikesReceived: true,
             userSkills: {
                 select: {
                     skill: true,
+                }
+            },
+            memberships: {
+                select: {
+                    project: {
+                        select: {
+                            id: true,
+                            name: true,
+                            imageUrl: true,
+                            status: true,
+                        }
+                    },
+                    permission: true,
+                    role: {
+                        select: {
+                            id: true,
+                            name: true,
+                        }
+                    },
+                    joinedAt: true,
                 }
             }
         }
