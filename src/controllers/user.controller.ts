@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { addUserSkillService, getUserByIdService, getUserByUsernameService, removeUserSkillService } from '../services/user.service';
+import { addUserSkillService, getUserByIdService, getUserByUsernameService, removeUserSkillService, updateUserService } from '../services/user.service';
 import { AuthRequest } from '../types/index'
 
 export const getMe = async (req: AuthRequest, res: Response) => {
@@ -62,5 +62,38 @@ export const removeUserSkill = async (req: AuthRequest, res: Response) => {
         res.status(204).send();
     } catch {
         res.status(500).json({ message: 'Error deleting skill' });
+    }
+};
+
+export const updateUser = async (req: AuthRequest, res: Response) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+        res.status(401).json({ message: "Unauthorized: No user ID" });
+        return;
+    }
+
+    const allowedField = [
+        'name',
+        'description',
+        'github',
+        'linkedin',
+        'twitter',
+        'website',
+    ];
+
+    const updateData: Record<string, string> = {};
+    for (const field of allowedField) {
+        if (req.body[field] !== undefined) {
+            updateData[field] = req.body[field];
+        }
+    }
+
+    try {
+        const updated = await updateUserService(userId, updateData);
+
+        res.json(updated);
+    } catch (error) {
+        res.status(500).json({ message: "Error to updated user" });
     }
 };

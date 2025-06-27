@@ -117,3 +117,17 @@ export const removeUserSkillService = async (userId: string, skillId: string) =>
         where: { userId_skillId: { userId, skillId } },
     });
 };
+
+export const updateUserService = async (id: string, data: Partial<{
+    name: string;
+    description: string;
+    github: string,
+    linkedin: string;
+    twitter: string;
+    website: string;
+}>) => {
+    return prisma.user.update({
+        where: { id },
+        data,
+    });
+};
