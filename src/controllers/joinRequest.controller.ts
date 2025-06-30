@@ -34,11 +34,11 @@ export const updateJoinRequestStatus = async (req: Request, res: Response) => {
 };
 
 export const deleteJoinRequest = async (req: Request, res: Response) => {
-    const userId = getUserIdRequest(req);
-    const { projectId } = req.params;
+    //const userId = getUserIdRequest(req);
+    const { requestId } = req.params;
 
     try {
-        await deleteJoinRequestService(userId, projectId);
+        await deleteJoinRequestService(requestId);
         res.status(204).send();
     } catch (error) {
         res.status(400).json({ error: 'Error to deleted' });

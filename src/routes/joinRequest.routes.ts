@@ -8,6 +8,6 @@ const router = Router();
 router.post("/", authenticateToken, createJoinRequest);
 router.get("/:projectId", authenticateToken, isProjectAdminOrModerator, getJoinRequestsByProject);
 router.put("/:requestId", authenticateToken, isProjectAdminOrModerator, updateJoinRequestStatus);
-router.delete("/:projectId", authenticateToken, isProjectAdminOrModerator, deleteJoinRequest);
+router.delete("/:requestId", authenticateToken, isProjectAdminOrModerator, deleteJoinRequest);
 
 export default router;

@@ -74,8 +74,8 @@ export const updateJoinRequestStatusService = async (requestId: string, status: 
     return joinRequest;
 };
 
-export const deleteJoinRequestService = async (userId: string, projectId: string) => {
+export const deleteJoinRequestService = async (requestId: string) => {
     return await prisma.joinRequest.delete({
-        where: { userId_projectId: { userId, projectId } },
+        where: { id: requestId },
     });
 };
