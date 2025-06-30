@@ -37,14 +37,32 @@ export const getProjectById = async (req: Request, res: Response) => {
 export const updateProject = async (req: Request, res: Response) => {
     const projectId = req.params.id;
     const userId = getUserIdRequest(req);
-    const { name, description } = req.body;
+    const { name, description, readme, github, linkedin, twitter, website } = req.body;
 
     if (!userId) {
         res.status(401).json({ message: 'Unauthorized' });
     };
 
+    const allowedFields = [
+        'name',
+        'description',
+        'readme',
+        'github',
+        'linkedin',
+        'twitter',
+        'website',
+    ];
+
+    const updateData: Record<string, string> = {};
+    for (const field of allowedFields) {
+        if (req.body[field] !== undefined) {
+            updateData[field] = req.body[field];
+        }
+    }
+
     try {
-        const updated = await updateProjectService(projectId, userId, name, description);
+        const updated = await updateProjectService(projectId, userId, updateData);
+        
         res.status(200).json(updated);
     } catch (error) {
         res.status(403).json({ message: 'Forbidden' });
