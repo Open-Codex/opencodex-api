@@ -19,7 +19,7 @@ export const createProjectService = async (name: string, description: string, cr
         roleId: defaultRole,
         permission: 'ADMIN',
     });
-    
+
     return project;
 };
 
@@ -49,7 +49,7 @@ export const getAllProjectsService = async () => {
                             lastLogin: true,
                         }
                     },
-                    role:{
+                    role: {
                         select: {
                             id: true,
                             name: true,
@@ -90,7 +90,7 @@ export const getProjectByIdService = async (id: string) => {
                             lastLogin: true,
                         }
                     },
-                    role:{
+                    role: {
                         select: {
                             id: true,
                             name: true,
@@ -138,7 +138,7 @@ export const updatePermissionService = async (
     projectId: string,
     targetUserId: string,
     requestingUserId: string,
-    newPermission: 'ADMIN' | 'MODERATOR' | 'MEMBER' 
+    newPermission: 'ADMIN' | 'MODERATOR' | 'MEMBER'
 ) => {
     const membership = await prisma.membership.findUnique({
         where: {
@@ -235,4 +235,48 @@ export const removeProjectMemberService = async (projectId: string, targetUserId
     });
 
     return { success: true};
+};
+
+export const leaveProjectService = async (
+    projectId: string,
+    userId: string
+) => {
+    const membership = await prisma.membership.findUnique({
+        where: {
+            userId_projectId: {
+                userId,
+                projectId,
+            },
+        },
+    });
+
+    if (!membership) {
+        throw new Error('NOT_A_MEMBER');
+    }
+
+    if (membership.permission === 'ADMIN') {
+        throw new Error('ADMIN_CANNOT_LEAVE');
+    }
+
+    // elimina membership
+    await prisma.membership.delete({
+        where: {
+            userId_projectId: {
+                userId,
+                projectId,
+            },
+        },
+    });
+
+    // elimina joinRequest aceptado previamente
+    await prisma.joinRequest.delete({
+        where: {
+            userId_projectId: {
+                userId,
+                projectId,
+            },
+        },
+    });
+
+    return { success: true };
 };
