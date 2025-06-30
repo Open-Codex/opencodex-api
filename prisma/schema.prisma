@@ -45,6 +45,7 @@ model Project {
     id               String         @id @default(cuid())
     name             String
     description      String
+    readme           String?
     imageUrl         String?
 
     // Social Links
