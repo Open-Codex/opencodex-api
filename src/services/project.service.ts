@@ -37,7 +37,28 @@ export const getAllProjectsService = async () => {
                 },
             },
             requiredSkills: { include: { skill: true } },
-            memberships: true,
+            memberships: {
+                select: {
+                    id: true,
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            username: true,
+                            github: true,
+                            lastLogin: true,
+                        }
+                    },
+                    role:{
+                        select: {
+                            id: true,
+                            name: true,
+                        }
+                    },
+                    permission: true,
+                    joinedAt: true,
+                },
+            },
         }
     });
 };
@@ -57,12 +78,41 @@ export const getProjectByIdService = async (id: string) => {
                 },
             },
             requiredSkills: { include: { skill: true } },
-            memberships: true,
+            memberships: {
+                select: {
+                    id: true,
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            username: true,
+                            github: true,
+                            lastLogin: true,
+                        }
+                    },
+                    role:{
+                        select: {
+                            id: true,
+                            name: true,
+                        }
+                    },
+                    permission: true,
+                    joinedAt: true,
+                },
+            },
         }
     });
 };
 
-export const updateProjectService = async (projectId: string, userId: string, name: string, description: string) => {
+export const updateProjectService = async (projectId: string, userId: string, data: Partial<{
+    name: string;
+    description: string;
+    readme: string
+    github: string;
+    linkedin: string;
+    twitter: string;
+    website: string;
+}>) => {
     const membership = await prisma.membership.findUnique({
         where: {
             userId_projectId: {
@@ -78,10 +128,7 @@ export const updateProjectService = async (projectId: string, userId: string, na
 
     const updated = await prisma.project.update({
         where: { id: projectId },
-        data: {
-            name,
-            description,
-        },
+        data,
     });
 
     return updated;
