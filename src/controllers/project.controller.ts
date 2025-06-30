@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createProjectService, getAllProjectsService, getProjectByIdService, updatePermissionService, updateProjectService } from '../services/project.service';
+import { createProjectService, getAllProjectsService, getProjectByIdService, removeProjectMemberService, updatePermissionService, updateProjectService } from '../services/project.service';
 import { getUserIdRequest } from '../utils/getUserIdRequest.util';
 
 export const createProject = async (req: Request, res: Response) => {
@@ -97,6 +97,42 @@ export const updatePermission = async (req: Request, res: Response) => {
 
             if (err.message === 'CANNOT_CHANGE_OWN_PERMISSION') {
                 res.status(400).json({ error: 'You cannot change your own permission' });
+            }
+
+            if (err.message === 'MEMBER_NOT_FOUND') {
+                res.status(404).json({ error: 'Target member not found in this project' });
+            }
+        }
+
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const removeProjectMember = async (req: Request, res: Response) => {
+    const { id, userId } = req.params;
+    const requesterId = getUserIdRequest(req);
+
+    try {
+        const removeMember = await removeProjectMemberService(
+            id, 
+            userId, 
+            requesterId
+        );
+
+        res.json({
+            message: 'Remove Member successfully',
+            removeMember: removeMember,
+        });
+
+    } catch (err) {
+        if (err instanceof Error) {
+            if (err.message === 'FORBIDDEN') {
+                res.status(403).json({ error: 'Only admins or moderators can remove members' });
+            }
+
+            if (err.message === 'CANNOT_REMOVE_SELF') {
+                res.status(400).json({ error: 'You cannot remove yourself from a project' });
             }
 
             if (err.message === 'MEMBER_NOT_FOUND') {
