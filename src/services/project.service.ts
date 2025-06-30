@@ -133,3 +133,52 @@ export const updateProjectService = async (projectId: string, userId: string, da
 
     return updated;
 };
+
+export const updatePermissionService = async (
+    projectId: string,
+    targetUserId: string,
+    requestingUserId: string,
+    newPermission: 'ADMIN' | 'MODERATOR' | 'MEMBER' 
+) => {
+    const membership = await prisma.membership.findUnique({
+        where: {
+            userId_projectId: {
+                userId: requestingUserId,
+                projectId,
+            },
+        },
+    });
+
+    if (!membership || membership.permission !== 'ADMIN') {
+        throw new Error('FORBIDDEN');
+    };
+
+    if (targetUserId === requestingUserId) {
+        throw new Error('CANNOT_CHANGE_OWN_PERMISSION');
+    };
+
+    const targetMembership = await prisma.membership.findUnique({
+        where: {
+            userId_projectId: {
+                userId: targetUserId,
+                projectId,
+            },
+        },
+    });
+
+    if (!targetMembership) {
+        throw new Error('MEMBER_NOT_FOUND');
+    };
+
+    return await prisma.membership.update({
+        where: {
+            userId_projectId: {
+                userId: targetUserId,
+                projectId,
+            },
+        },
+        data: {
+            permission: newPermission,
+        },
+    });
+};
