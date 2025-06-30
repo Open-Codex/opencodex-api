@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProject, getAllProjects, getProjectById, removeProjectMember, updatePermission, updateProject } from '../controllers/project.controller';
+import { createProject, getAllProjects, getProjectById, leaveProject, removeProjectMember, updatePermission, updateProject } from '../controllers/project.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 
 const router = Router();
@@ -12,5 +12,6 @@ router.put("/:id", authenticateToken, updateProject);
 router.put("/:id/members/:userId/permission", authenticateToken, updatePermission);
 
 router.delete("/:id/members/:userId", authenticateToken, removeProjectMember);
+router.delete("/:id/leave", authenticateToken, leaveProject);
 
 export default router;

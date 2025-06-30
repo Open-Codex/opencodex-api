@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createProjectService, getAllProjectsService, getProjectByIdService, removeProjectMemberService, updatePermissionService, updateProjectService } from '../services/project.service';
+import { createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updatePermissionService, updateProjectService } from '../services/project.service';
 import { getUserIdRequest } from '../utils/getUserIdRequest.util';
 
 export const createProject = async (req: Request, res: Response) => {
@@ -115,8 +115,8 @@ export const removeProjectMember = async (req: Request, res: Response) => {
 
     try {
         const removeMember = await removeProjectMemberService(
-            id, 
-            userId, 
+            id,
+            userId,
             requesterId
         );
 
@@ -139,6 +139,30 @@ export const removeProjectMember = async (req: Request, res: Response) => {
                 res.status(404).json({ error: 'Target member not found in this project' });
             }
         }
+
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const leaveProject = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const userId = getUserIdRequest(req);
+
+    try {
+        await leaveProjectService(id, userId);
+
+        res.json({ message: 'You have left the project successfully' });
+    } catch (err) {
+        if (err instanceof Error) {
+            if (err.message === 'NOT_A_MEMBER') {
+                res.status(400).json({ error: 'You are not a member of this project' });
+            }
+
+            if (err.message === 'ADMIN_CANNOT_LEAVE') {
+                res.status(403).json({ error: 'Project admin cannot leave the project' });
+            }
+        };
 
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
