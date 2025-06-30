@@ -6,7 +6,7 @@ import { hasPermission } from '../middlewares/hasPermission.middleware';
 const router = Router();
 
 router.get('/', getAllVacancies);
-router.get('/project/:projectId', authenticateToken, hasPermission, getVacanciesByProject)
+router.get('/project/:projectId', getVacanciesByProject)
 router.post("/", authenticateToken, hasPermission, createVacancy);
 router.put("/:id", authenticateToken, hasPermission, updateVacancy);
 router.delete("/:id", authenticateToken, hasPermission, deleteVacancy);
