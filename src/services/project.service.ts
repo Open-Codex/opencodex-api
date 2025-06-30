@@ -182,3 +182,57 @@ export const updatePermissionService = async (
         },
     });
 };
+
+export const removeProjectMemberService = async (projectId: string, targetUserId: string, requestingUserId: string) => {
+    const membership = await prisma.membership.findUnique({
+        where: {
+            userId_projectId: {
+                userId: requestingUserId,
+                projectId,
+            },
+        },
+    });
+
+    if (!membership || (membership.permission !== 'ADMIN' && membership.permission !== 'MODERATOR')) {
+        throw new Error('FORBIDDEN');
+    };
+
+    if (targetUserId === requestingUserId) {
+        throw new Error('CANNOT_REMOVE_SELF');
+    };
+
+    const targetMembership = await prisma.membership.findUnique({
+        where: {
+            userId_projectId: {
+                userId: targetUserId,
+                projectId,
+            },
+        },
+    });
+
+    if (!targetMembership) {
+        throw new Error('MEMBER_NOT_FOUND');
+    };
+
+    // elimina membership
+    await prisma.membership.delete({
+        where: {
+            userId_projectId: {
+                userId: targetUserId,
+                projectId,
+            },
+        },
+    });
+
+    // elimina joinRequest aceptado previamente
+    await prisma.joinRequest.delete({
+        where: {
+            userId_projectId: {
+                userId: targetUserId,
+                projectId,
+            },
+        },
+    });
+
+    return { success: true};
+};
