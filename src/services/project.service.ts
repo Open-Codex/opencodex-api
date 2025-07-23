@@ -36,6 +36,7 @@ export const getAllProjectsService = async () => {
                     avatarUrl: true,
                 },
             },
+            category: { select: { name: true, description: true } },
             requiredSkills: { include: { skill: true } },
             memberships: {
                 select: {
@@ -77,6 +78,7 @@ export const getProjectByIdService = async (id: string) => {
                     avatarUrl: true,
                 },
             },
+            category: { select: { name: true, description: true } },
             requiredSkills: { include: { skill: true } },
             memberships: {
                 select: {
@@ -279,4 +281,11 @@ export const leaveProjectService = async (
     });
 
     return { success: true };
+};
+
+export const updateProjectCategoryService = async (projectId: string, categoryId: string) => {
+    return await prisma.project.update({
+        where: { id: projectId },
+        data: { categoryId },
+    });
 };

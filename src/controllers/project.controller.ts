@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updatePermissionService, updateProjectService } from '../services/project.service';
+import { createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/project.service';
 import { getUserIdRequest } from '../utils/getUserIdRequest.util';
 
 export const createProject = async (req: Request, res: Response) => {
@@ -166,5 +166,20 @@ export const leaveProject = async (req: Request, res: Response) => {
 
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const updateProjectCategory = async (req: Request, res: Response) => {
+    const { projectId, categoryId } = req.body;
+    
+    try {
+        if (!projectId || !categoryId) {
+            res.status(400).json({ error: 'Project ID and Category ID are required' });
+        }
+
+        const updated = await updateProjectCategoryService(projectId, categoryId);
+        res.json(updated);
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating Project Category' });
     }
 };
