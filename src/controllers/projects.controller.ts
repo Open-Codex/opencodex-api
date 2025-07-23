@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/project.service';
+import { createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/projects.service';
 import { getUserIdRequest } from '../utils/getUserIdRequest.util';
 
 export const createProject = async (req: Request, res: Response) => {

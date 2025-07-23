@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addSkillUser, getMe, getUserByUsername, removeUserSkill, updateUser } from '../controllers/user.controller';
+import { addSkillUser, getMe, getUserByUsername, removeUserSkill, updateUser } from '../controllers/users.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 
 const router = Router();

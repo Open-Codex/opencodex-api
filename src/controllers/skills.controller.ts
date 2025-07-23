@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createSkillService, getSkillService } from '../services/skill.service';
+import { createSkillService, getSkillService } from '../services/skills.service';
 
 export const createSkill = async (req: Request, res: Response) => {
     try {

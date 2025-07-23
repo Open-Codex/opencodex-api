@@ -1,6 +1,6 @@
 import { getDefaultRole } from '../utils/getDefaultRole.util';
 import prisma from '../utils/prisma.util';
-import { createMembership } from './membership.service';
+import { createMembership } from './memberships.service';
 
 export const createProjectService = async (name: string, description: string, creatorId: string) => {
     const project = await prisma.project.create({

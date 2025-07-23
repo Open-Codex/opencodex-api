@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { rateUser } from '../controllers/logRating.controller';
+import { rateUser } from '../controllers/logRatings.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 
 const router = Router();

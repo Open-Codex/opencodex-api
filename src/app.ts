@@ -6,14 +6,14 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import testRoutes from './routes/test.routes';
 import authRoutes from './routes/auth.routes';
-import userRoutes from './routes/user.routes';
-import skillRoutes from './routes/skill.routes';
-import roleRoutes from './routes/role.routes';
-import projectRoutes from './routes/project.route';
+import usersRoutes from './routes/users.routes';
+import skillsRoutes from './routes/skills.routes';
+import rolesRoutes from './routes/roles.routes';
+import projectsRoutes from './routes/projects.route';
 import joinRequestRoutes from './routes/joinRequest.routes';
-import vacancyRoutes from './routes/vacancy.routes';
-import categoryRoutes from './routes/category.routes';
-import logRatingRoutes from './routes/logRating.routes';
+import vacanciesRoutes from './routes/vacancies.routes';
+import categoriesRoutes from './routes/categories.routes';
+import logRatingsRoutes from './routes/logRatings.routes';
 
 const app = express();
 
@@ -30,13 +30,13 @@ app.use(cors());
 // Routes
 app.use('/test', testRoutes);
 app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
-app.use('/skill', skillRoutes);
-app.use('/role', roleRoutes);
-app.use('/project', projectRoutes);
-app.use('/join-request', joinRequestRoutes);
-app.use('/vacancy', vacancyRoutes);
-app.use('/category', categoryRoutes);
-app.use('/rating', logRatingRoutes);
+app.use('/users', usersRoutes);
+app.use('/skills', skillsRoutes);
+app.use('/roles', rolesRoutes);
+app.use('/projects', projectsRoutes);
+app.use('/join-requests', joinRequestRoutes);
+app.use('/vacancies', vacanciesRoutes);
+app.use('/categories', categoriesRoutes);
+app.use('/ratings', logRatingsRoutes);
 
 export default app;
