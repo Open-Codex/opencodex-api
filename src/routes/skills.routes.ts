@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createSkill, getSkill } from '../controllers/skill.controller';
+import { createSkill, getSkill } from '../controllers/skills.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import { isAdmin } from '../middlewares/isAdmin.middleware';
 

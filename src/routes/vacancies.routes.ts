@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createVacancy, updateVacancy, deleteVacancy, getAllVacancies, getVacanciesByProject } from '../controllers/vacancy.controller';
+import { createVacancy, updateVacancy, deleteVacancy, getAllVacancies, getVacanciesByProject } from '../controllers/vacancies.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import { hasPermission } from '../middlewares/hasPermission.middleware';
 

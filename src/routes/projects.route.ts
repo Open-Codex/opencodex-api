@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProject, getAllProjects, getProjectById, leaveProject, removeProjectMember, updatePermission, updateProject, updateProjectCategory } from '../controllers/project.controller';
+import { createProject, getAllProjects, getProjectById, leaveProject, removeProjectMember, updatePermission, updateProject, updateProjectCategory } from '../controllers/projects.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import { isAdmin } from '../middlewares/isAdmin.middleware';
 

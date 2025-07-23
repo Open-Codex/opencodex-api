@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { rateUserService } from '../services/logRating.service';
+import { rateUserService } from '../services/logRatings.service';
 
 export const rateUser = async (req: Request, res: Response) => {
     try {

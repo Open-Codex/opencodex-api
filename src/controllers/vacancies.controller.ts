@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createVacancyService, addSkillsToVacancyService, updateVacancyService, deleteVacancyService, getAllVacanciesService, getVacanciesByProjectService } from '../services/vacancy.service';
+import { createVacancyService, addSkillsToVacancyService, updateVacancyService, deleteVacancyService, getAllVacanciesService, getVacanciesByProjectService } from '../services/vacancies.service';
 
 export const getAllVacancies = async (_req: Request, res: Response) => {
     const vacancies = await getAllVacanciesService();

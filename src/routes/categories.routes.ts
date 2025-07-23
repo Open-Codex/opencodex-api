@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getCategories, createCategory, updateCategory } from '../controllers/category.controller';
+import { getCategories, createCategory, updateCategory } from '../controllers/categories.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import { isAdmin } from '../middlewares/isAdmin.middleware';
 
