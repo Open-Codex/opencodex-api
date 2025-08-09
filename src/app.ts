@@ -14,6 +14,7 @@ import joinRequestRoutes from './routes/joinRequest.routes';
 import vacanciesRoutes from './routes/vacancies.routes';
 import categoriesRoutes from './routes/categories.routes';
 import logRatingsRoutes from './routes/logRatings.routes';
+import projetcInteractions from './routes/projectInteractions.routes';
 
 const app = express();
 
@@ -38,5 +39,6 @@ app.use('/join-requests', joinRequestRoutes);
 app.use('/vacancies', vacanciesRoutes);
 app.use('/categories', categoriesRoutes);
 app.use('/ratings', logRatingsRoutes);
+app.use('/project-interactions', projetcInteractions);
 
 export default app;
