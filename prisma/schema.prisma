@@ -39,6 +39,10 @@ model User {
     memberships     Membership[]
     joinRequests    JoinRequest[]
     userSkills      UserSkill[]
+
+    // Likes and Fav Projects
+    projectLikes     ProjectLike[]
+    projectFavorites ProjectFavorite[]
 }
 
 model Project {
@@ -54,6 +58,10 @@ model Project {
     twitter          String?
     website          String?
 
+    // Stats
+    likesCount      Int             @default(0)
+    favoritesCount  Int             @default(0)
+
     createdAt        DateTime       @default(now())
     status           ProjectStatus  @default(ACTIVE)
     creatorId        String
@@ -65,6 +73,10 @@ model Project {
     vacancies        Vacancy[]
     requiredSkills   ProjectSkill[]
     joinRequests     JoinRequest[]
+
+    // Likes and Fav Projects
+    projectLikes     ProjectLike[]
+    projectFavorites ProjectFavorite[]
 }
 
 model Category {
@@ -174,6 +186,30 @@ model LogRating {
     toUser      User     @relation("ReceivedRatings", fields: [toUserId], references: [id])
 
     @@unique([fromUserId, toUserId]) // evita votos duplicados
+}
+
+model ProjectLike {
+    id          String  @id @default(cuid())
+    userId      String
+    projectId   String
+    createdAt   DateTime @default(now())
+
+    user        User    @relation(fields: [userId], references: [id])
+    project Project @relation(fields: [projectId], references: [id])
+
+    @@unique([userId, projectId])
+}
+
+model ProjectFavorite {
+    id        String   @id @default(uuid())
+    userId    String
+    projectId String
+    createdAt DateTime @default(now())
+
+    project Project @relation(fields: [projectId], references: [id])
+    user    User    @relation(fields: [userId], references: [id])
+
+    @@unique([userId, projectId])
 }
 
 enum ProjectStatus {
