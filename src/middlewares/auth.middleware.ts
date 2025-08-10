@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 interface JwtPayload {
     userId: string;
     userRol: string;
+    name: string;
+    email: string;
 }
 
 export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
@@ -19,7 +21,9 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
         (req as any).user = {
             id: decoded.userId,
-            userRol: decoded.userRol
+            userRol: decoded.userRol,
+            name: decoded.name,
+            email: decoded.email
         };
 
         next();
