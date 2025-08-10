@@ -14,7 +14,7 @@ export const registerUserService = async (name: string, username: string, email:
         data: { name, username, email, password: hashed },
     });
 
-    const token = generateToken({ userId: user.id, userRol: user.userRol });
+    const token = generateToken({ userId: user.id, userRol: user.userRol, name: user.name, email: user.email });
     return { user, token };
 };
 
@@ -25,6 +25,6 @@ export const loginUserService = async (username: string, password: string) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) throw new Error('Invalid credentials');
 
-    const token = generateToken({ userId: user.id, userRol: user.userRol });
+    const token = generateToken({ userId: user.id, userRol: user.userRol, name: user.name, email: user.email });
     return { user, token };
 }
