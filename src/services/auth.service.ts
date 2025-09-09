@@ -25,6 +25,11 @@ export const loginUserService = async (username: string, password: string) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) throw new Error('Invalid credentials');
 
+    const updateLogin = await prisma.user.update({
+        where: { id: user.id },
+        data: { lastLogin: new Date() },
+    });
+
     const token = generateToken({ userId: user.id, userRol: user.userRol, name: user.name, email: user.email });
-    return { user, token };
+    return { user: updateLogin, token };
 }
