@@ -19,6 +19,7 @@ import projetcInteractions from './routes/projectInteractions.routes';
 const app = express();
 
 // Configurations and Middlewares
+const allowedOrigins = ['http://localhost:3000'];
 dotenv.config();
 app.use(express.json());
 app.use(helmet());
@@ -26,7 +27,19 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  exposedHeaders: ['set-cookie', 'Authorization'],
+}));
 
 // Routes
 app.use('/test', testRoutes);
