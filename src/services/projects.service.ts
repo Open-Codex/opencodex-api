@@ -60,6 +60,16 @@ export const getAllProjectsService = async () => {
                     joinedAt: true,
                 },
             },
+            vacancies: {
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    isFilled: true,
+                    createdAt: true,
+                    requiredSkills: true,
+                }
+            }
         }
     });
 };
@@ -102,6 +112,16 @@ export const getProjectByIdService = async (id: string) => {
                     joinedAt: true,
                 },
             },
+            vacancies: {
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    isFilled: true,
+                    createdAt: true,
+                    requiredSkills: true,
+                }
+            }
         }
     });
 };
