@@ -119,7 +119,11 @@ export const getProjectByIdService = async (id: string) => {
                     description: true,
                     isFilled: true,
                     createdAt: true,
-                    requiredSkills: true,
+                    requiredSkills: {
+                        include: {
+                            skill: true,
+                        }
+                    }
                 }
             }
         }
