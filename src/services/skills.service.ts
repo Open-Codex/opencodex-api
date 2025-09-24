@@ -9,3 +9,10 @@ export const createSkillService = async (name: string) => {
 export const getSkillService = async () => {
     return await prisma.skill.findMany();
 };
+
+export const updateSkillService = async (id: string, name: string) => {
+    return await prisma.skill.update({
+        where: { id },
+        data: { name }
+    });
+};
