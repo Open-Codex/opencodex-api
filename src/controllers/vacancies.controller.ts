@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 import { createVacancyService, addSkillsToVacancyService, updateVacancyService, deleteVacancyService, getAllVacanciesService, getVacanciesByProjectService } from '../services/vacancies.service';
 
-export const getAllVacancies = async (_req: Request, res: Response) => {
-    const vacancies = await getAllVacanciesService();
+export const getAllVacancies = async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const vacancies = await getAllVacanciesService(page, limit);
     res.status(200).json(vacancies);
 };
 
