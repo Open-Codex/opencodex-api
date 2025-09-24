@@ -9,3 +9,10 @@ export const createRoleService = async (name: string) => {
 export const getRoleService = async () => {
     return await prisma.role.findMany();
 };
+
+export const updateRoleService = async (id: string, name: string) => {
+    return await prisma.role.update({
+        where: { id },
+        data: { name }
+    });
+};
