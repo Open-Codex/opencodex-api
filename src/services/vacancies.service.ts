@@ -1,17 +1,31 @@
 import prisma from '../utils/prisma.util';
 
-export const getAllVacanciesService = async () => {
-    return await prisma.vacancy.findMany({
-        where: { isFilled: false },
-        include: {
-            project: {
-                select: { id: true, name: true }
+export const getAllVacanciesService = async (page: number, limit: number) => {
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+        prisma.vacancy.findMany({
+            skip,
+            take: limit,
+            where: { isFilled: false },
+            include: {
+                project: { select: { id: true, name: true } },
+                requiredSkills: { include: { skill: true } }
             },
-            requiredSkills: {
-                include: { skill: true }
-            }
-        }
-    });
+            orderBy: { createdAt: 'desc' }
+        }),
+        prisma.vacancy.count({ where: { isFilled: false } })
+    ]);
+
+    return {
+        data,
+        pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+        },
+    };
 };
 
 export const getVacanciesByProjectService = async (projectId: string) => {
