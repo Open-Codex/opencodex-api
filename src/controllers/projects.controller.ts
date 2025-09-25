@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { canAccessProjectAdminService, createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/projects.service';
+import { canAccessProjectAdminService, createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updateMemberRoleService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/projects.service';
 import { getUserIdRequest } from '../utils/getUserIdRequest.util';
 
 export const createProject = async (req: Request, res: Response) => {
@@ -195,5 +195,41 @@ export const canAccessProjectAdmin = async (req: Request, res: Response) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+export const updateMemberRole = async (req: Request, res: Response) => {
+    const { id: projectId, userId: targetUserId } = req.params;
+    const { roleId } = req.body;
+    const requesterId = getUserIdRequest(req);
+
+    if (!roleId) {
+        res.status(400).json({ error: 'Role ID is required' });
+    }
+
+    try {
+        const updatedMembership = await updateMemberRoleService(
+            projectId,
+            targetUserId,
+            requesterId,
+            roleId
+        );
+
+        res.json({
+            message: 'Role updated successfully',
+            membership: updatedMembership,
+        });
+    } catch (err) {
+        if (err instanceof Error) {
+            if (err.message === 'FORBIDDEN') {
+                res.status(403).json({ error: 'Only admins can update roles' });
+            }
+            if (err.message === 'MEMBER_NOT_FOUND') {
+                res.status(404).json({ error: 'Member not found in this project' });
+            }
+        }
+
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
