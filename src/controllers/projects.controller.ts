@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/projects.service';
+import { canAccessProjectAdminService, createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/projects.service';
 import { getUserIdRequest } from '../utils/getUserIdRequest.util';
 
 export const createProject = async (req: Request, res: Response) => {
@@ -171,7 +171,7 @@ export const leaveProject = async (req: Request, res: Response) => {
 
 export const updateProjectCategory = async (req: Request, res: Response) => {
     const { projectId, categoryId } = req.body;
-    
+
     try {
         if (!projectId || !categoryId) {
             res.status(400).json({ error: 'Project ID and Category ID are required' });
@@ -181,5 +181,19 @@ export const updateProjectCategory = async (req: Request, res: Response) => {
         res.json(updated);
     } catch (error) {
         res.status(500).json({ error: 'Error updating Project Category' });
+    }
+};
+
+export const canAccessProjectAdmin = async (req: Request, res: Response) => {
+    const projectId  = req.params.id;
+    const userId = getUserIdRequest(req);
+
+    try {
+        const hasAccess = await canAccessProjectAdminService(userId, projectId);
+
+        res.status(200).json({ success: hasAccess });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };
