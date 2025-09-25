@@ -260,7 +260,7 @@ export const removeProjectMemberService = async (projectId: string, targetUserId
         },
     });
 
-    return { success: true};
+    return { success: true };
 };
 
 export const leaveProjectService = async (
@@ -312,4 +312,15 @@ export const updateProjectCategoryService = async (projectId: string, categoryId
         where: { id: projectId },
         data: { categoryId },
     });
+};
+
+export const canAccessProjectAdminService = async (userId: string, projectId: string) => {
+    const membership = await prisma.membership.findUnique({
+        where: {
+            userId_projectId: { userId, projectId }
+        },
+        select: { permission: true }
+    });
+
+    return membership?.permission === 'ADMIN' || membership?.permission === 'MODERATOR';
 };
