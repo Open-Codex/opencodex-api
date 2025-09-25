@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { canAccessProjectAdminService, createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, updateMemberRoleService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/projects.service';
+import { addSkillsToProjectService, canAccessProjectAdminService, createProjectService, getAllProjectsService, getProjectByIdService, leaveProjectService, removeProjectMemberService, removeSkillFromProjectService, updateMemberRoleService, updatePermissionService, updateProjectCategoryService, updateProjectService } from '../services/projects.service';
 import { getUserIdRequest } from '../utils/getUserIdRequest.util';
 
 export const createProject = async (req: Request, res: Response) => {
@@ -185,7 +185,7 @@ export const updateProjectCategory = async (req: Request, res: Response) => {
 };
 
 export const canAccessProjectAdmin = async (req: Request, res: Response) => {
-    const projectId  = req.params.id;
+    const projectId = req.params.id;
     const userId = getUserIdRequest(req);
 
     try {
@@ -227,6 +227,57 @@ export const updateMemberRole = async (req: Request, res: Response) => {
             if (err.message === 'MEMBER_NOT_FOUND') {
                 res.status(404).json({ error: 'Member not found in this project' });
             }
+        }
+
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const addSkillsToProject = async (req: Request, res: Response) => {
+    const { id: projectId } = req.params;
+    const { skillIds } = req.body;
+    const userId = getUserIdRequest(req);
+
+    if (!Array.isArray(skillIds) || skillIds.length === 0) {
+        res.status(400).json({ error: 'skillIds must be a non empty array' });
+    }
+
+    try {
+        const projectSkills = await addSkillsToProjectService(projectId, userId, skillIds);
+
+        res.status(201).json({
+            message: 'Skills added successfully',
+            projectSkills,
+        });
+    } catch (err) {
+        if (err instanceof Error && err.message === 'FORBIDDEN') {
+            res.status(403).json({ error: 'Only admins or moderators can add skills' });
+        }
+
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const removeSkillFromProject = async (req: Request, res: Response) => {
+    const { id: projectId, skillId } = req.params;
+    const userId = getUserIdRequest(req);
+
+    try {
+        const removed = await removeSkillFromProjectService(projectId, userId, skillId);
+
+        res.status(200).json({
+            message: 'Skill removed successfully',
+            removed,
+        });
+    } catch (err) {
+        if (err instanceof Error && err.message === 'FORBIDDEN') {
+            res.status(403).json({ error: 'Only admins or moderators can remove skills' });
+        }
+
+        if (err instanceof Error && err.message.includes('Record to delete does not exist')) {
+            res.status(404).json({ error: 'Skill not found in this project' });
         }
 
         console.error(err);

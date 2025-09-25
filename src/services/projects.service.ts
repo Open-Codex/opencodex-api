@@ -356,3 +356,47 @@ export const updateMemberRoleService = async (
         },
     });
 };
+
+export const addSkillsToProjectService = async (projectId: string, userId: string, skillIds: string[]) => {
+    const membership = await prisma.membership.findUnique({
+        where: { userId_projectId: { userId, projectId } },
+    });
+
+    if (!membership || (membership.permission !== 'ADMIN' && membership.permission !== 'MODERATOR')) {
+        throw new Error('FORBIDDEN');
+    }
+
+    const projectSkills = await Promise.all(
+        skillIds.map(async (skillId) => {
+            return prisma.projectSkill.upsert({
+                where: {
+                    projectId_skillId: { projectId, skillId },
+                },
+                update: {},
+                create: { projectId, skillId },
+            });
+        })
+    );
+
+    return projectSkills;
+};
+
+export const removeSkillFromProjectService = async (projectId: string, userId: string, skillId: string) => {
+
+    const membership = await prisma.membership.findUnique({
+        where: { userId_projectId: { userId, projectId } },
+    });
+
+    if (!membership || (membership.permission !== 'ADMIN' && membership.permission !== 'MODERATOR')) {
+        throw new Error('FORBIDDEN');
+    }
+
+    return prisma.projectSkill.delete({
+        where: {
+            projectId_skillId: {
+                projectId,
+                skillId,
+            },
+        },
+    });
+};

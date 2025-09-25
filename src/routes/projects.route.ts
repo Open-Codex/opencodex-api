@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { canAccessProjectAdmin, createProject, getAllProjects, getProjectById, leaveProject, removeProjectMember, updateMemberRole, updatePermission, updateProject, updateProjectCategory } from '../controllers/projects.controller';
+import { addSkillsToProject, canAccessProjectAdmin, createProject, getAllProjects, getProjectById, leaveProject, removeProjectMember, removeSkillFromProject, updateMemberRole, updatePermission, updateProject, updateProjectCategory } from '../controllers/projects.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import { isAdmin } from '../middlewares/isAdmin.middleware';
 
@@ -19,5 +19,7 @@ router.delete("/:id/leave", authenticateToken, leaveProject);
 router.put("/category/change", authenticateToken, isAdmin, updateProjectCategory);
 router.get('/:id/can-admin', authenticateToken, canAccessProjectAdmin);
 router.put("/:id/members/:userId/role", authenticateToken, updateMemberRole);
+router.post("/:id/skills", authenticateToken, addSkillsToProject);
+router.delete("/:id/skills/:skillId", authenticateToken, removeSkillFromProject);
 
 export default router;
