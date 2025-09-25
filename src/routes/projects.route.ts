@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { canAccessProjectAdmin, createProject, getAllProjects, getProjectById, leaveProject, removeProjectMember, updatePermission, updateProject, updateProjectCategory } from '../controllers/projects.controller';
+import { canAccessProjectAdmin, createProject, getAllProjects, getProjectById, leaveProject, removeProjectMember, updateMemberRole, updatePermission, updateProject, updateProjectCategory } from '../controllers/projects.controller';
 import { authenticateToken } from '../middlewares/auth.middleware';
 import { isAdmin } from '../middlewares/isAdmin.middleware';
 
@@ -18,5 +18,6 @@ router.delete("/:id/leave", authenticateToken, leaveProject);
 // TODO move this endpoint to an Admin Routes
 router.put("/category/change", authenticateToken, isAdmin, updateProjectCategory);
 router.get('/:id/can-admin', authenticateToken, canAccessProjectAdmin);
+router.put("/:id/members/:userId/role", authenticateToken, updateMemberRole);
 
 export default router;

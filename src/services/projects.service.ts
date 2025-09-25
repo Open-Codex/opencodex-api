@@ -324,3 +324,35 @@ export const canAccessProjectAdminService = async (userId: string, projectId: st
 
     return membership?.permission === 'ADMIN' || membership?.permission === 'MODERATOR';
 };
+
+export const updateMemberRoleService = async (
+    projectId: string,
+    targetUserId: string,
+    requestingUserId: string,
+    newRoleId: string
+) => {
+    const membership = await prisma.membership.findUnique({
+        where: { userId_projectId: { userId: requestingUserId, projectId } },
+    });
+
+    if (!membership || membership.permission !== 'ADMIN') {
+        throw new Error('FORBIDDEN');
+    }
+
+    const targetMembership = await prisma.membership.findUnique({
+        where: { userId_projectId: { userId: targetUserId, projectId } },
+    });
+
+    if (!targetMembership) {
+        throw new Error('MEMBER_NOT_FOUND');
+    }
+
+    return await prisma.membership.update({
+        where: { userId_projectId: { userId: targetUserId, projectId } },
+        data: { roleId: newRoleId },
+        include: {
+            role: true,
+            user: true,
+        },
+    });
+};
