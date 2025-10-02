@@ -67,3 +67,13 @@ export const updateVacancyService = async (id: string, data: { title?: string, d
 export const deleteVacancyService = async (id: string) => {
     return await prisma.vacancy.delete({ where: { id } });
 };
+
+export const removeSkillsFromVacancyService = async (vacancyId: string, skillIds: string[]) => {
+    return await prisma.vacancySkill.deleteMany({
+        where: {
+            vacancyId,
+            skillId: { in: skillIds },
+        },
+    });
+};
+
