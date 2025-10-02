@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createVacancyService, addSkillsToVacancyService, updateVacancyService, deleteVacancyService, getAllVacanciesService, getVacanciesByProjectService } from '../services/vacancies.service';
+import { createVacancyService, addSkillsToVacancyService, updateVacancyService, deleteVacancyService, getAllVacanciesService, getVacanciesByProjectService, removeSkillsFromVacancyService } from '../services/vacancies.service';
 
 export const getAllVacancies = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
@@ -40,4 +40,28 @@ export const deleteVacancy = async (req: Request, res: Response) => {
     const { id } = req.params;
     await deleteVacancyService(id);
     res.status(204).send();
+};
+
+export const addSkillsToVacancy = async (req: Request, res: Response) => {
+    const { id } = req.params; // vacancyId
+    const { skillIds } = req.body; // array de string
+
+    if (!skillIds || !Array.isArray(skillIds) || skillIds.length === 0) {
+        res.status(400).json({ message: "skillIds is required and should be an array" });
+    }
+
+    const result = await addSkillsToVacancyService(id, skillIds);
+    res.status(200).json(result);
+};
+
+export const removeSkillsFromVacancy = async (req: Request, res: Response) => {
+    const { id } = req.params; // vacancyId
+    const { skillIds } = req.body;
+
+    if (!skillIds || !Array.isArray(skillIds) || skillIds.length === 0) {
+        res.status(400).json({ message: "skillIds is required and should be an array" });
+    }
+
+    const result = await removeSkillsFromVacancyService(id, skillIds);
+    res.status(200).json(result);
 };
